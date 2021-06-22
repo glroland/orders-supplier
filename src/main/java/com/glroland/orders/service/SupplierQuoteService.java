@@ -24,7 +24,7 @@ public class SupplierQuoteService {
 
     @POST
     @Path("/quote")
-    public void quoteProduct(SupplierQuote supplierQuote)
+    public SupplierQuote quoteProduct(SupplierQuote supplierQuote)
     {
         if (supplierQuote == null)
         {
@@ -47,11 +47,13 @@ public class SupplierQuoteService {
         supplierQuote.setSubtotalCost(subtotal);
 
         supplierQuote.setDateQuoted(new Date());
+
+        return supplierQuote;
     }
 
     @POST
     @Path("/tax")
-    public void calculateTax(SupplierQuote supplierQuote)
+    public SupplierQuote calculateTax(SupplierQuote supplierQuote)
     {
         if (supplierQuote == null)
         {
@@ -69,11 +71,13 @@ public class SupplierQuoteService {
 
         double tax = supplierQuote.getSubtotalCost() * (double)0.06;
         supplierQuote.setTax(roundPennies(tax));
+
+        return supplierQuote;
     }
 
     @POST
     @Path("/shipCost")
-    public void calculateShipping(SupplierQuote supplierQuote)
+    public SupplierQuote calculateShipping(SupplierQuote supplierQuote)
     {
         if (supplierQuote == null)
         {
@@ -94,6 +98,8 @@ public class SupplierQuoteService {
         double shipping = shippingPerUnit * (double)quantity;
 
         supplierQuote.setShipping(roundPennies(shipping));
+
+        return supplierQuote;
     }
 
     private double roundPennies(double amount)
@@ -103,7 +109,7 @@ public class SupplierQuoteService {
 
     @POST
     @Path("/shipDate")
-    public void estimateShipDate(SupplierQuote supplierQuote)
+    public SupplierQuote estimateShipDate(SupplierQuote supplierQuote)
     {
         if (supplierQuote == null)
         {
@@ -120,11 +126,13 @@ public class SupplierQuoteService {
         cal.set(Calendar.MILLISECOND, 0);
         cal.add(Calendar.DATE, rand);
         supplierQuote.setEstimatedShipDate(cal.getTime());
+
+        return supplierQuote;
     }
 
     @POST
     @Path("/finalize")
-    public void finalizeQuote(SupplierQuote supplierQuote)
+    public SupplierQuote finalizeQuote(SupplierQuote supplierQuote)
     {
         if (supplierQuote == null)
         {
@@ -155,5 +163,7 @@ public class SupplierQuoteService {
         supplierQuote.setTotalCost(roundPennies(total));
 
         supplierQuote.setStatus(Constants.SupplierRequestStatus.APPROVED);
+
+        return supplierQuote;
     }
 }
